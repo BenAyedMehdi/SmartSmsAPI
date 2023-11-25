@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartSms.Data;
 
@@ -11,9 +12,10 @@ using SmartSms.Data;
 namespace SmartSms.Data.Migrations
 {
     [DbContext(typeof(SmartSmsDbContext))]
-    partial class SmartSmsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231125171441_IsReceivedInMessagesTable")]
+    partial class IsReceivedInMessagesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
