@@ -50,17 +50,14 @@ namespace SmartSms.Controllers
             var newConversation = new Conversation()
             {
                 ConversationID = Guid.NewGuid(),
-                Messages = new List<Message>()
+                Messages = new List<Message>(),
+                CreatedAt= DateTime.Now,
+                UpdatedAt = DateTime.Now
             };
             _smartSmsDbContext.Conversations.Add(newConversation);
             await _smartSmsDbContext.SaveChangesAsync();
             return Ok(newConversation);
         }
 
-        //// PUT api/<ConversationController>/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody] string value)
-        //{
-        //}
     }
 }
