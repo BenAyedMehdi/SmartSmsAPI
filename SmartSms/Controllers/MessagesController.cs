@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SmartSms.Data;
 using SmartSms.Model;
 using SmartSms.Model.Requests;
+using SmartSms.Service;
+using SmartSms.Service.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,11 +14,15 @@ namespace SmartSms.Controllers
     [ApiController]
     public class MessageController : ControllerBase
     {
-        private readonly SmartSmsDbContext _smartSmsDbContext ;
+        private readonly SmartSmsDbContext _smartSmsDbContext;
+        private readonly IGptService _gptService;
+        private readonly IMessagingService _messagingService;
 
-        public MessageController(SmartSmsDbContext smartSmsDbContext)
+        public MessageController(SmartSmsDbContext smartSmsDbContext, IGptService gptService, IMessagingService messagingService)
         {
             _smartSmsDbContext = smartSmsDbContext;
+            _gptService = gptService;
+            _messagingService = messagingService;
         }
 
         [HttpGet]
@@ -42,7 +48,7 @@ namespace SmartSms.Controllers
         }
 
 
-        [HttpGet("{conversationId}")]
+        [HttpGet("conversation/{conversationId}")]
         public async Task<ActionResult<IEnumerable<Conversation>>> GetAllByConversationId(Guid conversationId)
         {
             var foundConversationMessages = await _smartSmsDbContext
@@ -64,19 +70,11 @@ namespace SmartSms.Controllers
             if (allConversationMessages.Value != null)
             {
                 conversationMessagesCount=  allConversationMessages.Value.ToList().Count;
-            }    
-            var newMessage = new Message()
-            {
-                ConversationID = request.ConversationId,
-                MessageId = new Guid(),
-                MessageContent= request.MessageContent,
-                OrderInTheList= conversationMessagesCount + 1,
-                IsReceived= true,
-                CreatedAt = DateTime.Now
-            };
-            _smartSmsDbContext.Messages.Add(newMessage);
-            await _smartSmsDbContext.SaveChangesAsync();
-            return Ok(newMessage);
+            }
+
+            var replySMS = await _messagingService.SendMessageAndGetTheAnswer(request, conversationMessagesCount);
+            
+            return Ok(replySMS);
         }
     }
 }

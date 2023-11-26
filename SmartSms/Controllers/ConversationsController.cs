@@ -52,7 +52,7 @@ namespace SmartSms.Controllers
                 ConversationID = Guid.NewGuid(),
                 Messages = new List<Message>(),
                 CreatedAt= DateTime.Now,
-                ModifiedAt = DateTime.Now
+                UpdatedAt = DateTime.Now
             };
             _smartSmsDbContext.Conversations.Add(newConversation);
             await _smartSmsDbContext.SaveChangesAsync();

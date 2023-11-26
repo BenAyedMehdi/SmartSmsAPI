@@ -26,6 +26,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IGptService, GptService>();
 builder.Services.AddScoped<IMessagingService, MessagingService>();
 
 builder.Services.AddDbContext<SmartSmsDbContext >(
