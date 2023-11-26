@@ -31,6 +31,7 @@ namespace SmartSms.Service
             await _smartSmsDbContext.SaveChangesAsync();
 
             var generatedReply = await _gptService.GenerateTextAsync(request.MessageContent);
+            generatedReply= generatedReply + "\n\n-Intelligence powered by your telecom provieder-";
 
             var newAnswerMessage = new Message()
             {
